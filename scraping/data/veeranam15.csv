@@ -1,4 +1,4 @@
-Date,Storage,Inflow,Discharge
+DATE,Storage in Mcft,inflow in cusec,Discharge in cusec
 01.01.15,1197.45,75,74+0
 02.01.15,1197.45,85,74+0
 03.01.15,1185.27,25,74+91
