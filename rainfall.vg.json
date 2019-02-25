@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 600,
+  "height": 500,
+  "background": "white",
+  "padding": 5,
+  "title": "RED HILLS recorded 5.57 inches of rainfall, 540% of normal",
+  "data": [
+    {
+      "name": "table",
+      "url": "data",
+      "format": {"parse": {"UNIX_TIME": "date"}},
+      "transform": [
+        {
+          "type": "fold",
+          "fields": {"signal": "lakes"},
+          "as": ["lake", "rainfall"]
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "lakes",
+      "value": [
+        "POONDI",
+        "CHOLA VARAM",
+        "RED HILLS",
+        "TAMARAI PAKKAM",
+        "CHEMBARAM BAKKAM",
+        "KORATTUR ANICUT",
+        "VEERANAM",
+        "NUNGAM BAKKAM",
+        "MEENAM BAKKAM"
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "yscale",
+      "type": "band",
+      "domain": {"data": "table", "field": "lake"},
+      "range": "height",
+      "padding": 0.05,
+      "round": true
+    },
+    {
+      "name": "xscale",
+      "type": "time",
+      "padding": 10,
+      "domain": {"data": "table", "field": "UNIX_TIME"},
+      "range": "width"
+    },
+    {
+      "name": "rainfall_scale",
+      "type": "linear",
+      "domain": {"data": "table", "field": "rainfall"},
+      "range": {"signal": "[0, bandwidth('yscale')]"}
+    }
+  ],
+  "axes": [
+    {
+      "orient": "top",
+      "scale": "xscale",
+      "tickExtra": true,
+      "grid": true,
+      "gridDash": [4],
+      "gridOpacity": 0.8,
+      "labelOverlap": "greedy"
+    },
+    {
+      "orient": "left",
+      "scale": "yscale",
+      "tickExtra": true,
+      "bandPosition": 0,
+      "grid": true,
+      "gridDash": [4]
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "xscale", "field": "UNIX_TIME"},
+          "height": {"scale": "rainfall_scale", "field": "rainfall"},
+          "y": {"field": "lake", "scale": "yscale"},
+          "width": {"signal": "2"},
+          "stroke": {"signal": "datum.rainfall == null ? '#DB8E34': '#0A1626'"},
+          "strokeWidth": {"value": 0.5}
+        },
+        "update": {"fill": {"value": "#397EA1"}},
+        "hover": {"fill": {"value": "#90D9DC"}, "tooltip": {"signal": "datum"}}
+      }
+    }
+  ],
+  "config": {}
+}
