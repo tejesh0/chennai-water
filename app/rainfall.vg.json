@@ -1,10 +1,14 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v4.json",
-  "width": 600,
-  "height": 500,
   "background": "white",
   "padding": 5,
-  "title": "RED HILLS recorded 5.57 inches of rainfall, 540% of normal",
+  "autosize": "fit",
+  "title": {
+    "text": "Bar depth indicates Rainfall in mm, Orange indicates missing data",
+    "font": "helvetica",
+    "fontSize": 18,
+    "fontWeight": 400
+  },
   "data": [
     {
       "name": "table",
@@ -90,8 +94,11 @@
           "stroke": {"signal": "datum.rainfall == null ? '#DB8E34': '#0A1626'"},
           "strokeWidth": {"value": 0.5}
         },
-        "update": {"fill": {"value": "#397EA1"}},
-        "hover": {"fill": {"value": "#90D9DC"}, "tooltip": {"signal": "datum"}}
+        "update": {
+          "fill": {"value": "#397EA1"},
+          "tooltip": {"signal": "{'Lake': datum.lake, 'Rainfall(mm)': datum.rainfall}"}}
+        },
+        "hover": {"fill": {"value": "#90D9DC"}
       }
     }
   ],
