@@ -48,7 +48,7 @@
           "actions" : {
             "source": false,
             "compiled": false,
-            // "editor": false
+            "editor": false
           } 
         })
         .catch(console.error)  // eslint-disable-line no-console
@@ -61,27 +61,20 @@
     $('.formhandler').formhandler({
       src: 'data',
       filters: true,
-      pageSize: 5,
+      pageSize: 9,
       columns: [
         {
           name: '*'
         },
         {
-          name: 'UNIX_TIME',
-          hide: true
-        },
-        {
-          name: 'Year',
-          format: function(args) {
-            console.log(args)
-            return (new Date(args.row.UNIX_TIME)).getFullYear()
-          }
-        },
-        {
           name: 'Month',
           format: function(args) {
-            return monthNames[(new Date(args.row.UNIX_TIME)).getMonth()]
+            return monthNames[args.value]
           }
+        },
+        {
+          name: 'UNIX_TIME',
+          hide: true
         }
       ],
       sizeValues: [10, 50, 100, 1000]

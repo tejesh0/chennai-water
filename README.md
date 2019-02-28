@@ -1,5 +1,7 @@
 # fov-chennai-water
 
+## Build Instructions
+
 1. Install Anaconda from https://www.anaconda.com/distribution/#download-section
 2. Install Nodejs (binaries from nodesource https://github.com/nodesource/distributions)
 3. Create a Conda environment
@@ -19,3 +21,15 @@
 Apps runs on port :9988
 
 Visit http://localhost:9988/
+
+
+## Usage
+
+[![Watch the video](https://imgur.com/a/Vk1wRSE)](https://youtu.be/AnxC2_p_BFE)
+
+
+## list of dependencies
+- [Gramex](https://github.com/gramener/gramex/blob/master/LICENSE): [MIT license][MIT]
+- [Python](https://www.python.org/): [PSF license][PSF]
+  - [Anaconda](https://docs.anaconda.com/anaconda/) distribution: [BSD license][BSD]
+- [node.js](https://github.com/nodejs/node/blob/master/LICENSE): [MIT license][MIT]

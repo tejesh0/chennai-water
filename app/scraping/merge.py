@@ -21,6 +21,8 @@ csv_filename = 'ultimate_rainfall.csv'
 all_col_header = [
     'DATE',
     'UNIX_TIME',
+    'Year',
+    'Month',
     'POONDI',
     'CHOLA VARAM',
     'RED HILLS',
@@ -48,8 +50,11 @@ with open(os.path.join(_APPDATA, csv_filename), newline='', encoding='utf-8', mo
                 for col in all_col_header:
                     if col not in row:
                         dict_row[col] = ''
-                
-                dict_row['UNIX_TIME'] = parser.parse(dict_row['DATE']).timestamp()*1000
+
+                date = parser.parse(dict_row['DATE'])
+                dict_row['UNIX_TIME'] = date.timestamp()*1000
+                dict_row['Year'], dict_row['Month'] = date.strftime("%Y,%m").split(',')
+
                 csv_writer.writerow(row)
 
     log.info('CSV data created: %s', csv_filename)
