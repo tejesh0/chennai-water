@@ -15,6 +15,7 @@
 1. Activate the environment
 2. Run 
 `git clone git@github.com:tejesh95/fov-chennai-water.git`
+3. Run 
 `cd fov-chennai-water/app && gramex`
 
 

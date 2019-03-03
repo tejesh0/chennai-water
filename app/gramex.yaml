@@ -22,6 +22,15 @@ url:
       headers:
         Access-Control-Allow-Origin: '*'
 
+  sqlite_conn_:
+    pattern: /$YAMLURL/db_data
+    handler: FormHandler
+    kwargs:
+      url: sqlite:///$YAMLPATH/scraping/data/app.fov.db
+      table: rainfall
+      headers:
+        Access-Control-Allow-Origin: '*'
+
 
 # Gramex init configurations for app: fov-chennai-water
 # ----------------------------------------------------------------------------

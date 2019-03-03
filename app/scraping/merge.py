@@ -1,6 +1,5 @@
 import os
 import csv
-import sys
 import logging
 from dateutil import parser
 
@@ -10,8 +9,10 @@ log = logging.getLogger(__file__)
 _DIR = os.path.dirname(os.path.abspath(__file__))
 _APPDATA = os.path.join(_DIR, 'data')
 
+
 def startswith_rainfall(filename):
     return filename.startswith('rainfall')
+
 
 # read files based on startswith filename in directory
 rainfall_datafiles = list(filter(startswith_rainfall, os.listdir(_APPDATA)))
@@ -43,7 +44,7 @@ with open(os.path.join(_APPDATA, csv_filename), newline='', encoding='utf-8', mo
             reader = csv.DictReader(read_csvfile)
             for row in reader:
                 dict_row = row
-                #Exception handling: RED HILLS column name
+                # Exception handling: RED HILLS column name
                 if 'REDHILLS' in row:
                     dict_row['RED HILLS'] = row['REDHILLS']
                     dict_row.pop('REDHILLS')
@@ -52,7 +53,7 @@ with open(os.path.join(_APPDATA, csv_filename), newline='', encoding='utf-8', mo
                         dict_row[col] = ''
 
                 date = parser.parse(dict_row['DATE'])
-                dict_row['UNIX_TIME'] = date.timestamp()*1000
+                dict_row['UNIX_TIME'] = date.timestamp() * 1000
                 dict_row['Year'], dict_row['Month'] = date.strftime("%Y,%m").split(',')
 
                 csv_writer.writerow(row)

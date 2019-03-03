@@ -31,7 +31,8 @@ def scrape(year, csv_filename, link, csspath, col_header=[]):
             row = []
             for i in range(total_columns):
                 row.append(tdElems[index+i].text_content().strip())
-            if (index != 0 and row[0] == 'DATE'): #rainfall data tables contain Header in b/t rows
+            if (index != 0 and row[0] == 'DATE'):
+                # rainfall data tables contain Header in b/t rows
                 continue
             log.info('row: %s', row)
             csv_writer.writerow(row)
@@ -49,8 +50,7 @@ def main():
         scrape(year, os.path.join(_APPDATA, 'veeranam' + year + '.csv'),
                'http://www.chennaimetrowater.tn.nic.in/veeranam%20' + year + '.htm',
                'body > div > div:nth-child(5) > table > tr',
-                ['DATE', 'Storage in Mcft', 'inflow in cusec', 'Discharge in cusec'])
-
+               ['DATE', 'Storage in Mcft', 'inflow in cusec', 'Discharge in cusec'])
 
     for year in range(8, 20):
         year = str(year).zfill(2)
