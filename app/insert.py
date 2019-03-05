@@ -54,7 +54,7 @@ class Veeranam(Base):
     unix_time = Column(Date, primary_key=True)
     storage = Column(Integer, primary_key=True)
     inflow = Column(Integer, primary_key=True)
-    lake = Column(String, primary_key=True, default="Veeranam")
+    lake = Column(String, primary_key=True, default="VEERANAM")
     discharge = Column(String, primary_key=True)
 
     def __init__(self, date, unix_time, storage, inflow, discharge):
@@ -72,24 +72,25 @@ Base.metadata.create_all(engine)
 
 _DIR = os.path.dirname(os.path.abspath(__file__))
 
-# with open(os.path.join(_DIR, 'scraping/data/ultimate_rainfall.csv'), mode='r') as csvfile:
-#     reader = csv.DictReader(csvfile)
-#     for dict_row in reader:
-#         for key, value in dict_row.items():
-#             if key not in ['DATE', 'UNIX_TIME', 'Year', 'Month']:
-#                 date = datetime.fromtimestamp(float(dict_row['UNIX_TIME'])/1000)
-#                 # print([dict_row['DATE'], date, value, key])
-#                 rainfall = Rainfall(dict_row['DATE'], date, value, key)
-#                 try:
-#                     session.add(rainfall)
-#                     session.commit()
-#                 except Exception as e:
-#                     session.rollback()
-#                     log.info('%s', e)
-#                     pass
+with open(os.path.join(_DIR, 'scraping/data/ultimate_rainfall.csv'), mode='r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for dict_row in reader:
+        for key, value in dict_row.items():
+            if key not in ['DATE', 'UNIX_TIME', 'Year', 'Month']:
+                date = datetime.fromtimestamp(float(dict_row['UNIX_TIME'])/1000)
+                # print([dict_row['DATE'], date, value, key])
+                rainfall = Rainfall(dict_row['DATE'], date, value, key)
+                try:
+                    session.add(rainfall)
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
+                    log.info('%s', e)
+                    pass
 
 for year in range(14, 20):
-    with open(os.path.join(_DIR, 'scraping/data/veeranam' + str(year) + '.csv'), mode='r') as csvfile:
+    file_name = os.path.join(_DIR, 'scraping/data/veeranam' + str(year) + '.csv')
+    with open(file_name, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
         reader = csv.DictReader(csvfile)
         for dict_row in reader:

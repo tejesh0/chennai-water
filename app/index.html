@@ -12,7 +12,7 @@
 
 <body>
   <div class="p-4">
-    <div class="formhandler">
+    <div class="formhandler-rainfall">
     </div>
     <div class="chart">
 
@@ -22,6 +22,7 @@
   <script src="ui/jquery/dist/jquery.min.js"></script>
   <script src="ui/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="ui/lodash/lodash.min.js"></script>
+  <script src="ui/moment/min/moment-with-locales.min.js"></script>
   <script src="formhandler.js"></script>
   <script src="ui/vega/build/vega.min.js"></script>
   <script src="ui/vega-embed/build/vega-embed.min.js"></script>
@@ -33,9 +34,13 @@
 
     function renderFormhandler() {
       var hash = window.location.hash.replace(/#/, '')
+      var url_parse = g1.url.parse(hash).searchList
       $.get('rainfall.vg.json').done(function(spec) {
 
         spec['data'][0].url = spec['data'][0].url + hash
+        spec['data'][1].url = spec['data'][1].url + hash
+
+
         vegaEmbed('.chart', spec, {
           defaultStyle: true,
           renderer: 'canvas',
@@ -58,26 +63,42 @@
     renderFormhandler()
     $(window).on('hashchange', renderFormhandler)
 
-    $('.formhandler').formhandler({
+    $('.formhandler-rainfall').formhandler({
       src: 'data',
       filters: true,
       pageSize: 9,
+      sizeValues: [10, 50, 100, 1000],
       columns: [
         {
           name: '*'
         },
         {
-          name: 'Month',
-          format: function(args) {
-            return monthNames[args.value]
-          }
+          name: 'lake',
+          unique: ['POONDI',
+            'CHOLA VARAM',
+            'RED HILLS',
+            'TAMARAI PAKKAM',
+            'CHEMBARAM BAKKAM',
+            'KORATTUR ANICUT',
+            'VEERANAM',
+            'NUNGAM BAKKAM',
+            'MEENAM BAKKAM'
+          ]
         },
         {
-          name: 'UNIX_TIME',
+          name: "month_number",
           hide: true
+        },
+        {
+          name: "date",
+          hide: true
+        },
+        {
+          name: 'unix_time',
+          type: 'date',
+          format: 'DD MMM YYYY'
         }
-      ],
-      sizeValues: [10, 50, 100, 1000]
+      ]
     })
     
   </script>

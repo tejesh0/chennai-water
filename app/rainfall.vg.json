@@ -4,46 +4,49 @@
   "padding": 5,
   "autosize": "fit",
   "title": {
-    "text": "Bar depth indicates Rainfall in mm, Orange indicates missing data",
+    "text": "Thin blue bar indicates Rainfall in mm, Light blue bar indicates Storage level (in Mcft),  Orange indicates missing data",
     "font": "helvetica",
-    "fontSize": 18,
+    "fontSize": 14,
     "fontWeight": 400
   },
   "data": [
     {
       "name": "table",
-      "url": "data",
-      "format": {"parse": {"UNIX_TIME": "date"}},
+      "url": "http://localhost:9000/data",
+      "format": {
+        "parse": {
+          "unix_time": "date"
+        }
+      },
       "transform": [
         {
-          "type": "fold",
-          "fields": {"signal": "lakes"},
-          "as": ["lake", "rainfall"]
+          "type": "window",
+          "sort": {"field": "month_number", "order": "ascending"},
+          "ops": ["dense_rank"],
+          "fields": [null],
+          "as": ["dense_rank"]
         }
       ]
-    }
-  ],
-  "signals": [
+    },
     {
-      "name": "lakes",
-      "value": [
-        "POONDI",
-        "CHOLA VARAM",
-        "RED HILLS",
-        "TAMARAI PAKKAM",
-        "CHEMBARAM BAKKAM",
-        "KORATTUR ANICUT",
-        "VEERANAM",
-        "NUNGAM BAKKAM",
-        "MEENAM BAKKAM"
-      ]
+      "name": "storage",
+      "url": "http://localhost:9000/storage",
+      "format": {
+        "parse": {
+          "month_date": "date"
+        }
+      }
     }
   ],
   "scales": [
     {
       "name": "yscale",
       "type": "band",
-      "domain": {"data": "table", "field": "lake"},
+      "domain": {
+        "data": "table",
+        "field": "lake",
+        "sort": true
+      },
       "range": "height",
       "padding": 0.05,
       "round": true
@@ -52,14 +55,40 @@
       "name": "xscale",
       "type": "time",
       "padding": 10,
-      "domain": {"data": "table", "field": "UNIX_TIME"},
+      "domain": {
+        "data": "table",
+        "field": "unix_time"
+      },
       "range": "width"
     },
     {
       "name": "rainfall_scale",
       "type": "linear",
-      "domain": {"data": "table", "field": "rainfall"},
-      "range": {"signal": "[0, bandwidth('yscale')]"}
+      "domain": {
+        "data": "table",
+        "field": "rainfall"
+      },
+      "range": {
+        "signal": "[0, bandwidth('yscale')]"
+      }
+    },
+    {
+      "name": "storage_x_scale",
+      "type": "band",
+      "paddingInner": 0.1,
+      "domain": {"data": "table", "field": "month_number", "sort": true},
+      "range": "width"
+    },
+    {
+      "name": "storage_y_scale",
+      "type": "linear",
+      "domain": {
+        "data": "storage",
+        "field": "storage_level"
+      },
+      "range": {
+        "signal": "[0, bandwidth('yscale')]"
+      }
     }
   ],
   "axes": [
@@ -68,7 +97,10 @@
       "scale": "xscale",
       "tickExtra": true,
       "grid": true,
-      "gridDash": [4],
+      "format": "%Y-%b",
+      "gridDash": [
+        4
+      ],
       "gridOpacity": 0.8,
       "labelOverlap": "greedy"
     },
@@ -78,29 +110,97 @@
       "tickExtra": true,
       "bandPosition": 0,
       "grid": true,
-      "gridDash": [4]
+      "gridDash": [
+        4
+      ]
     }
   ],
   "marks": [
     {
       "type": "rect",
-      "from": {"data": "table"},
+      "from": {
+        "data": "storage"
+      },
       "encode": {
         "enter": {
-          "x": {"scale": "xscale", "field": "UNIX_TIME"},
-          "height": {"scale": "rainfall_scale", "field": "rainfall"},
-          "y": {"field": "lake", "scale": "yscale"},
-          "width": {"signal": "2"},
-          "stroke": {"signal": "datum.rainfall == null ? '#DB8E34': '#0A1626'"},
-          "strokeWidth": {"value": 0.5}
+          "x": {
+            "signal": "scale('storage_x_scale', datum.month_number)"
+          },
+          "height": {
+            "scale": "storage_y_scale",
+            "field": "storage_level"
+          },
+          "y": {
+            "signal": "scale('yscale', datum.lake)"
+          },
+          "width": {
+            "signal": "bandwidth('storage_x_scale')"
+          },
+          "strokeWidth": {
+            "value": 0.5
+          }
         },
         "update": {
-          "fill": {"value": "#397EA1"},
-          "tooltip": {"signal": "{'Lake': datum.lake, 'Rainfall(mm)': datum.rainfall}"}}
+          "fill": {
+            "value": "#397EA1"
+          },
+          "fillOpacity": {
+            "signal": "scale('storage_x_scale', datum.month_number) ? 0.4 : 0"
+          },
+          "tooltip": {
+            "signal": "{ 'Date': timeFormat(datum.month_date, '%b %Y'), 'Lake': datum.lake, 'storage level(Mcft)': datum.storage_level}"
+          }
+        }
+      },
+      "hover": {
+        "fill": {
+          "value": "blue"
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {
+        "data": "table"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "scale": "xscale",
+            "field": "unix_time"
+          },
+          "height": {
+            "scale": "rainfall_scale",
+            "field": "rainfall"
+          },
+          "y": {
+            "field": "lake",
+            "scale": "yscale"
+          },
+          "width": {
+            "signal": "2"
+          },
+          "stroke": {
+            "signal": "datum.rainfall == '' ? '#DB8E34': '#0A1626'"
+          },
+          "strokeWidth": {
+            "value": 0.5
+          }
         },
-        "hover": {"fill": {"value": "#90D9DC"}
+        "update": {
+          "fill": {
+            "value": "#397EA1"
+          },
+          "tooltip": {
+            "signal": "{ 'Date': timeFormat(datum.unix_time, '%B %d, %Y'), 'Lake': datum.lake, 'Rainfall(mm)': datum.rainfall}"
+          }
+        }
+      },
+      "hover": {
+        "fill": {
+          "value": "#90D9DC"
+        }
       }
     }
-  ],
-  "config": {}
+  ]
 }

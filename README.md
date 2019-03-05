@@ -16,7 +16,7 @@
 2. Run 
 `git clone git@github.com:tejesh95/fov-chennai-water.git`
 3. Run 
-`cd fov-chennai-water/app && gramex`
+`cd fov-chennai-water/app && gramex --listen.port=9988`
 
 
 Apps runs on port :9988
@@ -24,9 +24,12 @@ Apps runs on port :9988
 Visit http://localhost:9988/
 
 
-## Usage
+Note: Scraping scripts are in scraping folder. Datasets stored inside scraping/data folder
 
-[![Watch the video](https://user-images.githubusercontent.com/6937958/53541131-64ffaf00-3b3e-11e9-85d3-ce39826ef125.png)](https://youtu.be/AnxC2_p_BFE)
+
+## Usage (Video Link)
+
+[![Watch the video](https://user-images.githubusercontent.com/6937958/53812957-89b2b700-3f82-11e9-811c-8298f9b86c19.png)](https://youtu.be/GU4p5wEdSic)
 
 
 ## List of dependencies
