@@ -1,4 +1,4 @@
-# fov-chennai-water
+# chennai-water
 
 ## Build Instructions (linux/ubuntu)
 
@@ -14,9 +14,9 @@
 ## To run the app
 1. Activate the environment
 2. Run 
-`git clone git@github.com:tejesh95/fov-chennai-water.git`
+`git clone git@github.com:tejesh95/chennai-water.git`
 3. Run 
-`cd fov-chennai-water/app && gramex --listen.port=9988`
+`cd chennai-water/app && gramex --listen.port=9988`
 
 
 Apps runs on port :9988
